@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>烟花表白</title>
+    
+    <style>
+        *{
+            padding:0;
+            margin:0;
+        }
+        
+        body{
+            background-color: #000;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="can" width="100%" height="1000"></canvas>
+    <!-- <div id="box" style="left: 0;"></div> -->
+    <script>
+        var can=document.getElementById("can");
+        var c=can.getContext("2d");
+        var w=can.width=window.innerWidth;
+        var h=can.Height=window.innerHeight;
+        c.beginPath();
+        c.fillStyle = "red";
+        c.fillRect(0,0,w,h);
+        c.closePath();
+        window.onresize=function(){
+            w=can.width=window.innerWidth;
+            h=can.Height=window.innerHeight;
+            c.beginPath();
+            c.fillStyle="black";
+            c.fillRect(0,0,w,h);
+            c.closePath();
+        }
+        function Fireworks(){}
+        Fireworks.prototype={
+            init:function(){
+                this.x=ranNum(0,w);
+                this.y=h-30;
+                this.ys=4;
+                this.r=1;
+                this.rs=2;
+                this.a=1;
+                this.as=0.02;
+                this.l=ranNum(0.1*h,0.3*h);
+                this.color="rgba("+ranNum(0,255)+","+ranNum(0,255)+","+ranNum(0,255)+","+this.a+")";
+            },
+            draw:function(){
+                if(this.y>this.l){
+                    c.fillStyle=this.color;
+                    c.fillRect(this.x,this.y,2,10);
+                }else{
+                    c.beginPath();
+                    c.arc(this.x,this.y,this.r,0,Math.PI*2,true);
+                    c.strokeStyle=this.color;
+                    c.stroke();
+                    c.closePath();
+                }
+                
+                
+                this.update();
+            },
+            update:function(){
+                if(this.y>this.l){
+                    this.y-=this.ys;
+                }else{
+                    if(this.r<100){
+                        this.r+=this.rs;
+                        this.a*=this.as;
+                    }else{
+                        this.init();
+                    }
+                }
+                // this.y-=this.ys;
+            }
+        }
+        // 存对象
+        var fire=[];
+        // 实例化对象
+        setTimeout(function(){
+            for(var i=0;i<30;i++){
+            
+                var firework=new Fireworks;
+                firework.init();
+                fire.push(firework);
+           
+           
+        }
+        },5000);
+       
+        // 出现以及移动，调用画方法
+        function move(){
+            c.beginPath();
+            c.fillStyle="rgba(0,0,0,0.1)";
+            c.fillRect(0,0,w,h);
+            c.beginPath();
+            c.closePath();
+            for(var i=0;i<fire.length;i++){
+                fire[i].draw();
+            }
+            requestAnimationFrame(move);
+        }
+        move();
+        function ranNum(min,max){
+            return Math.random()*(max-min)+min;
+
+        }
+        function Circle(){
+
+        }
+        
+    
+    </script>
+</body>
+</html>
